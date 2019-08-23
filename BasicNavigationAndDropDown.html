@@ -1,52 +1,76 @@
 <!DOCTYPE html>
 <html>
-    <head>
-      
-       
-        <style>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
             #body-div
             {
-                height: 500px;
+                height: 100%;
             }
-            #header
+            header
             {
-                height:20%;
+                height:10%;
                 background-color: rgb(36, 36, 133);
+                color: #d4d4d4;
                 text-align: center;
                 align-content: center;
-                padding: 20px;
+                padding: 1%;
+                left: 0;
+                top: 0;
+                width: 100%;
             }
             footer
             {
-                height:20% ;
+                height:10% ;
                 background-color: rgb(36, 36, 133);
+                color: #d4d4d4;
                 text-align: center;
                 align-content: center;
-                padding: 20px;
+                padding: 1%;
+                position: fixed;
+                left: 0;
+                bottom: 0;
+                width: 100%;
                 
             }
             #main-div
             {
-                height: 60%;
+                height: inherit;
             }
             #left-div
             {
                 background-color: rgb(43, 198, 226);
-                float: left;
+               
                 width: 20%;
                 height: 100%;
+                float:left;
             }
-            #right-div
+            .right-div
             {
                 align-content: center;
-                float: left;
+                justify-content: center;
+                padding: 2%;
+                bottom: 80px;
+                float:left;
+                position:sticky;
+                height: 100%;
                 width: 80%;
-                height:100%;
+                display: none;
+                background-color: aqua;
             }
-            #nav-list
+            #right-div-todo
+            {
+                display: inline-block;
+            }
+            .nav-list
             {
                 list-style-type: none;
-                padding: 0%;
+                padding: 1%;
                 margin-left: 0%;
             }
             .list
@@ -57,9 +81,14 @@
                 padding: 10px;
             border-color: black;
             border-style: solid;
+            border-radius: 5px;
+
             }
             li:hover {
+              font-size: 20px;
+              
   background-color:darkslategray;
+  box-shadow: #d4d4d4;
         }
         * { box-sizing: border-box; }
 body {
@@ -67,11 +96,9 @@ body {
 }
 .autocomplete {
   position: relative;
-    
   margin: 20px;
   align-content: center;
   align-items: center;
-  display: inline-block;
 }
 input {
   border: 1px solid transparent;
@@ -80,49 +107,400 @@ input {
   padding: 10px;
   font-size: 14px;
 }
-#sub-button
+
+#tasklist
 {
-    width:100px;
-    background-color:teal;
+    background-color: white;
+    display:none;
+    width: 280px;
+  padding: 10px;
+    float:left; 
+    clear: left;
+    position: relative;
 }
+#tasklistul
+{
+    position:absolute;
+    float: left;
+}
+
+
+</style>
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font: 16px Arial;  
+}
+
+.autocomplete {
+  position: relative;
+  display: inline-block;
+}
+
+input {
+  border: 1px solid transparent;
+  background-color: #f1f1f1;
+  padding: 10px;
+  font-size: 16px;
+}
+
+
+button {
+  background-color: DodgerBlue;
+  color: #fff;
+  cursor: pointer;
+  border: 1px solid transparent;
+  width:100px;
+  padding: 10px;
+  position: relative;
+  display: inline-block;
+}
+
+.listitems {
+  position: absolute;
+  border: 1px solid #d4d4d4;
+  border-bottom: none;
+  border-top: none;
+  z-index: 99;
+  top: 100%;
+  left: 0;
+  width: 280px;
+}
+
+.listitems div {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #fff; 
+  border-bottom: 1px solid #d4d4d4; 
+}
+
+.listitems div:hover {
+  background-color:grey; 
+}
+#table-element {
+    border: 1px solid #d4d4d4; 
+    padding: 10px;
+    margin:5%;
+    border-collapse: collapse;
+    margin-bottom: 20%;
+}
+#table-div
+{
+  display: inline-block;
+  overflow: auto;
+}
+td, th{
+    border: 1px solid #d4d4d4; 
+    padding: 10px;
+    column-span: none;
+     border-collapse: collapse;
+}
+
+.delelement 
+{
+  cursor: pointer;
+  color: red;
+
+}
+.editelement 
+{
+  cursor: pointer;
+  color:dodgerblue;
+
+}
+</style>
+</head>     
+
+
+<body  onclick="myFunction(event)">
+
+
+
+<div id="body-div">
+  <header>
+      Todo Header
+  </header>
+  <div id="main-div">
+      <div id= "left-div">
+          <ul class="nav-list">
+              <li class="list" id="todo" onclick="showdiv('todo')">Todo</li>
+              <li class="list" id="user" onclick="showdiv('user')">User</li>
+              <li class="list" id="dept" onclick="showdiv('dept')">department</li>
+              <li class="list" id="about" onclick="showdiv('about')">About</li>
+          </ul>
+      </div>
+      <div class="right-div" id="right-div-todo">
+
+        <p></p>
+        <div>
+          <div class="autocomplete" style="width:300px;">
+            <input id="myInput" type="text" name="mytask" placeholder="task" 
+            onfocus="showlist()"
+            onblur="hidelist()"
+            onkeyup="showsuggestion(document.getElementById('myInput').value)">
             
-        </style>
+          
+          </div>
+          <button onclick="updatetable()">Search</button>
+          <button onclick ="addtask()">ADD</button>
+          </div>
+          <div id="table-div">
+              <table id="table-element">
+                  <th>task</th><th>task details</th>
+                  <th></th><th></th>
+              </table>
 
-    </head>
-    <body>
-    <div id="body-div">
-        <div id="header">
-             Navigation Bar and Dropdown Header
-        </div>
-        <div id="main-div">
-            <div id= "left-div">
-                <ul id="nav-list">
-                    <li class="list">Todo</li>
-                    <li class="list">User</li>
-                    <li class="list">department</li>
-                    <li class="list">Logout</li>
-                </ul>
-            </div>
-            <div id="right-div">
-                        <div class="autocomplete" style="width:300px;">
-                          <input id="myInput"list="tasklist" type="text" name="task" placeholder="Select Task">
-                         
-  <datalist id="tasklist">
-    <option value="Task1">
-    <option value="Task2">
-    <option value="Task3">
-    <option value="Task4">
-    <option value="Task5">
-  </datalist>
-                        </div>
-                        <button  id="sub-button">ADD</button>
-                     
+          </div>
+                  
+               
 
-            </div>
+      </div>
+      <div class="right-div" id="right-div-user">
+
+            <p></p>
+              <h2>User Panel</h2>
+                  
         </div>
-        <footer>
-            Navigation Bar and Dropdown Footer
-        </footer>
-    </div>
-    </body>
+        <div class="right-div" id="right-div-dept">
+
+                <p></p>
+                  <h2>Department Panel</h2>
+                      
+            </div>
+            <div class="right-div" id="right-div-about">
+
+                    <p></p>
+                      <h2>About Us</h2>
+                          
+                </div>
+  </div>
+  <footer>
+      Todo Footer
+  </footer>
+</div>
+
+
+
+
+
+
+<script>
+ // var alltasks = ["brush","cook", "run", "exercise", "walk", "dance", "runjob"];
+ var alltasks =[];
+  for(var i=0; i<localStorage.length;i++)
+  {
+    alltasks.push(localStorage.key(i));
+  }
+  
+
+
+function showdiv(selectdiv)
+ {
+    var navlist = document.getElementsByClassName("right-div");
+
+    var i;
+    for(i=0;i<navlist.length;i++)
+    {
+        navlist[i].style.display="none";
+    }
+    document.getElementsByClassName("right-div")
+        document.getElementById("right-div-"+selectdiv).style.display="block";
+
+ }
+  function hideallLists() {
+    var x = document.getElementsByClassName("listitems");
+    for (var i = 0; i < x.length; i++) {
+        x[i].parentNode.removeChild(x[i]);
+      
+    }
+  }
+  var l;
+  function theFunction(e)
+      { 
+        alert(e.target.id);
+      }
+  function myFunction(event) 
+      { 
+         l = (event.currentTarget.nodeName);
+      }
+ function hidelist()
+ {
+    window.onclick = e => 
+    {
+    if(e.target.parentNode.id != "myInputsuggestionlist")
+      {
+       hideallLists();
+      }
+    } 
+    
+ }
+
+function addtask()
+{
+    var inputelementval= document.getElementById("myInput").value;
+    if(inputelementval!="")
+    {
+      if(alltasks.indexOf(inputelementval)==-1)
+      {
+        alltasks.push(inputelementval);
+        localStorage.setItem(inputelementval, "null");
+        showtable(0,alltasks.length,alltasks);
+      }
+      else
+      {
+        alert("already in list");
+      }
+    }
+}
+
+
+var clickelement =document.getElementById("finallist");
+     
+      
+  
+ 
+function showsuggestion(inputvalue)
+{
+    var sortedlist = [];
+    var a,b;
+    var input;
+    inputelement= document.getElementById("myInput");
+    hideallLists();
+
+      a = document.createElement("DIV");
+      a.setAttribute("id", inputelement.id + "suggestionlist");
+      a.setAttribute("class", "listitems");
+      inputelement.parentNode.appendChild(a);
+      
+    
+    for (i = 0; i < alltasks.length; i++) {
+        if (alltasks[i].substr(0, inputvalue.length).toUpperCase() == inputvalue.toUpperCase()) {
+          sortedlist.push(alltasks[i]);
+          
+        }
+      }
+      for(i = 0; i < sortedlist.length; i++)
+      {
+        b = document.createElement("DIV");
+        b.setAttribute("id","finallist"+i);
+        b.setAttribute("class","finalclass");
+          b.innerHTML = sortedlist[i];
+          b.innerHTML += "<input type='hidden' value='" + sortedlist[i] + "'>";
+          b.onclick = function(){    // use onmouseover and remove method hideallLists...................
+              inputelement.value = this.getElementsByTagName("input")[0].value;
+              hideallLists();
+          
+          };
+          a.appendChild(b);
+      }
+      //can use eventlistener
+     /* document.addEventListener("click", function () {
+        hideallLists();
+      });*/
+        //.onclick()= function(){ hideallLists(); };
+
+}
+function showtable(start,end, tasklist)
+{
+    var tableelement = document.getElementById("table-element");
+    for(var i = tableelement.rows.length; i > 1;i--)
+{
+  tableelement.deleteRow(i -1);
+}
+    var tablerow,tabledata1, tabledata2, edit, del;
+    for(i = start; i < end; i++)
+      {
+          tablerow = document.createElement("tr");
+          tableelement.appendChild(tablerow);
+
+          tabledata1 = document.createElement("td");
+          tabledata1.setAttribute("id","task"+i);
+          tabledata1.contentEditable= false;
+          tabledata1.innerHTML =tasklist[i];
+          tablerow.appendChild(tabledata1);
+
+          tabledata2 = document.createElement("td");
+          tabledata2.innerHTML ="null";
+          tablerow.appendChild(tabledata2);
+
+          edit= document.createElement("td");
+         // edit.contentEditable= true;
+          edit.innerHTML ="<a class=\"editelement\" id=\"data\"   onclick=\"editFunction(this.parentNode)\" >edit</a>";
+          tablerow.appendChild(edit);
+
+          del = document.createElement("td");
+          del.innerHTML ="<a class=\"delelement\" onclick=\"delFunction(this.parentNode)\">delete</a>";
+          tablerow.appendChild(del);
+          
+          
+          
+      }
+      
+}
+
+function updatetable()
+{
+  var updatedlist =[];
+  var inputvalue=document.getElementById("myInput").value;
+  for (i = 0; i < alltasks.length; i++) 
+  {
+        if (alltasks[i].substr(0, inputvalue.length).toUpperCase() == inputvalue.toUpperCase())
+         {
+          updatedlist.push(alltasks[i]);
+         }
+  }
+  var inputelementval= document.getElementById("myInput").value;
+  if(inputelementval!="")
+   {
+    showtable(0,updatedlist.length,updatedlist);
+   }
+  else
+  {
+      alert("Enter value to search");
+  }
+}
+function delFunction(x)
+{
+  localStorage.removeItem(alltasks[x.parentNode.rowIndex -1]);
+  alltasks.splice(x.parentNode.rowIndex -1, 1);
+  showtable(0,alltasks.length,alltasks);
+}
+var flag=0;
+function editFunction(x)
+{ 
+  var taskedit=document.getElementById("table-element").rows[x.parentNode.rowIndex ].cells[0];
+  var editbtn = document.getElementById("table-element").rows[x.parentNode.rowIndex ].cells[2];
+  var index=(x.parentNode.rowIndex)-1;
+  if(flag==0)
+  {
+  taskedit.contentEditable = true;
+  taskedit.focus();
+  flag=1;
+  editbtn.innerHTML =
+  "<a class=\"editelement\" id=\"data\"   onclick=\"editFunction(this.parentNode)\" style=\"color: green\">add</a>";
+  //document.getElementById("table-element").rows[x.parentNode.rowIndex ].cells[2].style.color = 'green';
+  }
+  else
+  {
+    flag=0;
+    taskedit.contentEditable = false;
+    var idname="task"+index;
+    alltasks[index]= taskedit.innerHTML;
+    editbtn.innerHTML =
+  "<a class=\"editelement\" id=\"data\"   onclick=\"editFunction(this.parentNode)\" style=\"color: blue\">edit</a>";
+  showtable(0,alltasks.length,alltasks);
+  }
+
+}
+window.onload = function()
+{
+showtable(0,alltasks.length,alltasks);
+}
+
+</script>
+
+</body>
 </html>
